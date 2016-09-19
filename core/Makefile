@@ -1835,12 +1835,18 @@ ifeq ($(TARGET_BUILD_TYPE),debug)
 endif
 name := $(name)-ota-$(FILE_NAME_TAG)
 
-INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
+# added by eskilop 18/09/2016
+date := $(shell date -u +%d%m%Y)
+crystal_version := aquamarine
+
+# was $(PRODUCT_OUT)/$(name).zip
+
+INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(USER)-$(TARGET_PRODUCT)-$(crystal_version)-$(date).zip
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
-	@echo "Package OTA: $@"
+	@echo "Crystal Rom OTA: $@"
 	$(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
 	   ./build/tools/releasetools/ota_from_target_files -v \
 	   --block \
@@ -1871,8 +1877,10 @@ $(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	   ./build/tools/releasetools/img_from_target_files -v \
 	   -p $(HOST_OUT) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
+	  
 
 .PHONY: updatepackage
+
 updatepackage: $(INTERNAL_UPDATE_PACKAGE_TARGET)
 
 # -----------------------------------------------------------------

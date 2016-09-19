@@ -682,7 +682,7 @@ function tapas()
     destroy_build_var_cache
 }
 
-function gettop
+function gettop()
 {
     local TOPFILE=build/core/envsetup.mk
     if [ -n "$TOP" -a -f "$TOP/$TOPFILE" ] ; then
@@ -1542,8 +1542,25 @@ function get_make_command()
   echo command make
 }
 
+function remove_target()
+{
+	color_failed=$'\E'"[0;31m"
+  color_success=$'\E'"[36m"
+  color_reset=$'\E'"[00m"
+	echo -n "${color_success}hi, I'm Eskilop${color_reset}"
+	echo
+}
+
 function make()
 {
+	  color_failed=$'\E'"[0;31m"
+    color_success=$'\E'"[36m"
+    color_reset=$'\E'"[00m"
+    echo -n "${color_success} I'm starting your build bro...${color_reset}"
+    echo
+    export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m"
+    out/host/linux-x86/bin/jack-admin kill-server
+    out/host/linux-x86/bin/jack-admin start-server
     local start_time=$(date +"%s")
     $(get_make_command) "$@"
     local ret=$?
@@ -1555,7 +1572,7 @@ function make()
     local ncolors=$(tput colors 2>/dev/null)
     if [ -n "$ncolors" ] && [ $ncolors -ge 8 ]; then
         color_failed=$'\E'"[0;31m"
-        color_success=$'\E'"[0;32m"
+        color_success=$'\E'"[36m"
         color_reset=$'\E'"[00m"
     else
         color_failed=""
@@ -1564,9 +1581,13 @@ function make()
     fi
     echo
     if [ $ret -eq 0 ] ; then
-        echo -n "${color_success}#### make completed successfully "
+        echo -n "${color_success}#### make completed successfully"
+	echo
+	echo "Crystal Rom build finished, Flash it NOW."
     else
         echo -n "${color_failed}#### make failed to build some targets "
+	echo
+	echo "Sorry 'bout that bro, it wasn't my fault..."
     fi
     if [ $hours -gt 0 ] ; then
         printf "(%02g:%02g:%02g (hh:mm:ss))" $hours $mins $secs

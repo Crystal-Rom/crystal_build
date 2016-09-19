@@ -610,8 +610,19 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 """ % bcb_dev)
 
   # Dump fingerprints
-  script.Print("Target: %s" % CalculateFingerprint(
-      oem_props, oem_dict, OPTIONS.info_dict))
+  #script.Print("Target: %s" % CalculateFingerprint(
+  #    oem_props, oem_dict, OPTIONS.info_dict))
+  
+  # added by Eskilop 18/09/2016
+  
+  script.Print("+--------------------------+")
+  script.Print("|  Welcome to Crystal Rom  |")
+  script.Print("|                          |")
+  script.Print("|   Installation program   |")
+  script.Print("+--------------------------+")
+  script.Print("")
+  script.Print("")
+  script.Print("[*] Installation Started.")
 
   device_specific.FullOTA_InstallBegin()
 
@@ -642,12 +653,14 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     system_diff = common.BlockDifference("system", system_tgt, src=None)
     system_diff.WriteScript(script, output_zip)
   else:
+    script.Print("[*] Formatting /system...")
     script.FormatPartition("/system")
     script.Mount("/system", recovery_mount_options)
     if not has_recovery_patch:
       script.UnpackPackageDir("recovery", "/system")
     script.UnpackPackageDir("system", "/system")
-
+    
+    script.Print("[*] Copying /system...")
     symlinks = CopyPartitionFiles(system_items, input_zip, output_zip)
     script.MakeSymlinks(symlinks)
 
@@ -675,20 +688,24 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
       vendor_diff = common.BlockDifference("vendor", vendor_tgt)
       vendor_diff.WriteScript(script, output_zip)
     else:
+      script.Print("[*] Formatting /vendor...")
       script.FormatPartition("/vendor")
       script.Mount("/vendor", recovery_mount_options)
       script.UnpackPackageDir("vendor", "/vendor")
-
+      
+      script.Print("[*] Copying /vendor...")
       symlinks = CopyPartitionFiles(vendor_items, input_zip, output_zip)
       script.MakeSymlinks(symlinks)
 
       vendor_items.GetMetadata(input_zip)
+      script.Print("[*] Setting permissions...")
       vendor_items.Get("vendor").SetPermissions(script)
 
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
 
   script.ShowProgress(0.05, 5)
+  script.Print("[*] Writing /boot...")
   script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.2, 10)
@@ -698,10 +715,12 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.AppendExtra(OPTIONS.extra_script)
 
   script.UnmountAll()
+  script.Print("[*] Unmounted partitions.")
 
   if OPTIONS.wipe_user_data:
     script.ShowProgress(0.1, 10)
     script.FormatPartition("/data")
+    script.Print("[*] Formatting /data...")
 
   if OPTIONS.two_step:
     script.AppendExtra("""
