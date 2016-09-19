@@ -1836,12 +1836,11 @@ endif
 name := $(name)-ota-$(FILE_NAME_TAG)
 
 # added by eskilop 18/09/2016
-date := $(shell date -u +%d%m%Y)
-crystal_version := aquamarine
+date := $(shell date -u +%d%m%Y_%H.%M)
 
 # was $(PRODUCT_OUT)/$(name).zip
 
-INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(USER)-$(TARGET_PRODUCT)-$(crystal_version)-$(date).zip
+INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(USER)-$(TARGET_PRODUCT)-$(CRYSTAL_VERSION)-$(CRYSTAL_VERSION_CODENAME)-$(CRYSTAL_VERSION_BRANCH)-$(date).zip
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
