@@ -24,7 +24,6 @@ PRODUCT_PACKAGES += \
     BasicDreams \
     BlockedNumberProvider \
     BookmarkProvider \
-#   Browser2 \			We're not gonna use webview browser.
     Calendar \
     CalendarProvider \
     CaptivePortalLogin \
@@ -50,12 +49,13 @@ PRODUCT_PACKAGES += \
     PrintSpooler \
     PrintRecommendationService \
     ProxyHandler \
-#   QuickSearchBox \		We're not gonna use awful searchbar neither.
     Settings \
     SharedStorageBackup \
     Telecom \
     TeleService \
     VpnDialogs \
     MmsService
+#   Browser2 \			We're not gonna use webview browser.
+#   QuickSearchBox \		We're not gonna use awful searchbar neither.
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_base.mk)

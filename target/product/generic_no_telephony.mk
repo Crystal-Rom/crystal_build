@@ -22,13 +22,13 @@ PRODUCT_PACKAGES := \
     BluetoothMidiService \
     Camera2 \
     Gallery2 \
-#   Music \				-> Not gonna use Music, which crashes.
     MusicFX \
     OneTimeInitializer \
     Provision \
     SystemUI \
     EasterEgg \
     WallpaperCropper
+#   Music \				 Not gonna use Music, which crashes.
 
 PRODUCT_PACKAGES += \
     clatd \
