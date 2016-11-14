@@ -523,11 +523,23 @@ add_lunch_combo aosp_x86_64-eng
 
 function print_lunch_menu()
 {
+
+    crystal_blue=$'\e[38;5;39m'
+    crystal_error=$'\e[38;5;196m'
+    blink=$'\E[5m'
+    bold=$'\E[1m'
+    rev=$'\E[7m'
+    sitm=$'\E[3m'
+    ritm=$'\E[23m'
+    smul=$'\E[4m'
+    rmul=$'\E[24m'
+    reset=$'\E(B\E[m'
+    
     local uname=$(uname)
     echo
-    echo "You're building on" $uname
+    echo -en "You're building "${crystal_blue}${bold}"Crystal Rom"${reset}" on "${crystal_blue}${bold}${blink}$uname${reset}"\n"
     echo
-    echo "Lunch menu... pick a combo:"
+    echo "So here we are, what device you want to build for?"
 
     local i=1
     local choice
@@ -544,14 +556,26 @@ function lunch()
 {
     local answer
 
+    crystal_blue=$'\e[38;5;39m'
+    crystal_error=$'\e[38;5;196m'
+    blink=$'\E[5m'
+    bold=$'\E[1m'    
+    rev=$'\E[7m'
+    sitm=$'\E[3m'    
+    ritm=$'\E[23m'    
+    smul=$'\E[4m'    
+    rmul=$'\E[24m'
+    reset=$'\E(B\E[m'
+    
     if [ "$1" ] ; then
-        answer=$1
-    else
+      answer=$1
+      else
         print_lunch_menu
         echo -n "Which would you like? [aosp_arm-eng] "
         read answer
     fi
-
+    
+    
     local selection=
 
     if [ -z "$answer" ]
@@ -571,7 +595,7 @@ function lunch()
     if [ -z "$selection" ]
     then
         echo
-        echo "Invalid lunch combo: $answer"
+        echo -en ${crystal_error}"Invalid lunch combo: $answer"${reset}
         return 1
     fi
 
@@ -582,8 +606,8 @@ function lunch()
     if [ $? -ne 0 ]
     then
         echo
-        echo "** Invalid variant: '$variant'"
-        echo "** Must be one of ${VARIANT_CHOICES[@]}"
+        echo -en ${crystal_error}"** Invalid variant: '$variant'"${reset}
+        echo -en ${crystal_error}"** Must be one of ${VARIANT_CHOICES[@]}"${reset}
         variant=
     fi
 
@@ -594,8 +618,8 @@ function lunch()
     if [ $? -ne 0 ]
     then
         echo
-        echo "** Don't have a product spec for: '$product'"
-        echo "** Do you have the right repo manifest?"
+        echo -en ${crystal_error}"** Don't have a product spec for: '$product'"
+        echo -en ${crystal_error}"** Do you have the right repo manifest?"${reset}
         product=
     fi
 
@@ -607,13 +631,16 @@ function lunch()
 
     export TARGET_PRODUCT=$product
     export TARGET_BUILD_VARIANT=$variant
-    export TARGET_BUILD_TYPE=release
+    export TARGET_BUILD_TYPE=userdebug
 
     echo
 
     set_stuff_for_environment
     printconfig
     destroy_build_var_cache
+    
+    echo -en "\n"${crystal_blue}"Very well, now type: "${bold}${crystal_blue}${blink}"make otapackage"${reset}${crystal_blue}" to make a flashable zip!\n\n"${reset}
+    
 }
 
 # Tab completion for lunch.
@@ -1544,6 +1571,18 @@ function get_make_command()
 
 function make()
 {
+    
+    crystal_blue=$'\e[38;5;39m'
+    crystal_error=$'\e[38;5;196m'
+    blink=$'\E[5m'
+    bold=$'\E[1m'    
+    rev=$'\E[7m'
+    sitm=$'\E[3m'    
+    ritm=$'\E[23m'    
+    smul=$'\E[4m'    
+    rmul=$'\E[24m'
+    reset=$'\E(B\E[m'
+    
     local start_time=$(date +"%s")
     $(get_make_command) "$@"
     local ret=$?
@@ -1564,9 +1603,9 @@ function make()
     fi
     echo
     if [ $ret -eq 0 ] ; then
-        echo -n "${color_success}#### make completed successfully "
+      echo -en "${crystal_blue}Good news for you, ${blink}${bold}NO FUCKING ERRORS${reset}\n\nSO ${smul}${bold}WHY ARE YOU STILL HERE?${reset}${bold} FLASH IT! NOW!${reset}\n\n"
     else
-        echo -n "${color_failed}#### make failed to build some targets "
+        echo -en "${crystal_error}Sorry bro, there were some errors, go and see what's wrong with the code, then recompile."${reset}"\n\n"
     fi
     if [ $hours -gt 0 ] ; then
         printf "(%02g:%02g:%02g (hh:mm:ss))" $hours $mins $secs
@@ -1575,7 +1614,6 @@ function make()
     elif [ $secs -gt 0 ] ; then
         printf "(%s seconds)" $secs
     fi
-    echo " ####${color_reset}"
     echo
     return $ret
 }

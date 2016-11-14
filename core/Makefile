@@ -1926,13 +1926,16 @@ ifeq ($(build_ota_package),true)
 # -----------------------------------------------------------------
 # OTA update package
 
+date := $(shell date -u +%d%m%Y_%H.%M)
+
+
 name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
 name := $(name)-ota-$(FILE_NAME_TAG)
 
-INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
+INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(USER)-$(TARGET_PRODUCT)-$(CRYSTAL_VERSION)-$(CRYSTAL_VERSION_CODENAME)-$(CRYSTAL_VERSION_BRANCH)-$(date).zip
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 

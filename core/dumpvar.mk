@@ -1,6 +1,11 @@
 
 # List of variables we want to print in the build banner.
 print_build_config_vars := \
+  CRYSTAL_VERSION \
+  CRYSTAL_VERSION_CODENAME \
+  CRYSTAL_VERSION_BRANCH \
+  CRYSTAL_API_LEVEL \
+  CRYSTAL_BUILD_FLAVOUR \
   PLATFORM_VERSION_CODENAME \
   PLATFORM_VERSION \
   TARGET_PRODUCT \
